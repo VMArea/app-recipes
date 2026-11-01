@@ -1,0 +1,81 @@
+{
+  "slug": "nextcloud",
+  "name": "Nextcloud",
+  "summary": "Private file sync and collaboration with MariaDB and Redis, installed with the admin account created and cron jobs running.",
+  "appVersion": "35.0.2",
+  "minVcpu": 2,
+  "minRamMb": 2048,
+  "minDiskGb": 20,
+  "firstRunTimeoutMinutes": 25,
+  "supportsDomain": true,
+  "loginIdentifier": {
+    "kind": "username",
+    "value": "admin"
+  },
+  "exposurePolicy": {
+    "openByDefault": [
+      {
+        "port": 22,
+        "protocol": "tcp",
+        "label": "SSH"
+      },
+      {
+        "port": 80,
+        "protocol": "tcp",
+        "label": "HTTP redirect"
+      },
+      {
+        "port": 443,
+        "protocol": "tcp",
+        "label": "Nextcloud (HTTPS)"
+      }
+    ],
+    "openOnRequest": [],
+    "localhostOnly": [
+      {
+        "port": 8080,
+        "protocol": "tcp",
+        "label": "Nextcloud web (behind Caddy)"
+      }
+    ]
+  },
+  "outputs": [
+    {
+      "key": "url",
+      "label": "Nextcloud URL",
+      "secret": false,
+      "required": true
+    },
+    {
+      "key": "adminUser",
+      "label": "Admin username",
+      "secret": false,
+      "required": true
+    },
+    {
+      "key": "adminPassword",
+      "label": "Admin password",
+      "secret": true,
+      "required": true
+    }
+  ],
+  "healthCheck": {
+    "type": "http",
+    "url": "http://127.0.0.1:8080/status.php",
+    "expectStatus": [
+      200
+    ]
+  },
+  "notes": "Official nextcloud 35.0.2 apache image with MariaDB 11.8.9 and Redis 7.2.9 (last BSD-3-Clause line), all pinned by tag and digest. Database and Redis are only on the private compose network. The admin account is created at install and its password is reset on every run; trusted domains are set to the IP and the domain when given. A cron container runs background jobs. Without a domain the site is served over HTTPS with a self-signed certificate for the IP address.",
+  "licence": {
+    "spdx": "AGPL-3.0-or-later",
+    "url": "https://raw.githubusercontent.com/nextcloud/server/v35.0.2/COPYING",
+    "shippedTag": "v35.0.2",
+    "note": "Nextcloud server AGPL-3.0-or-later (run unmodified); MariaDB GPL-2.0; Redis 7.2.9 BSD-3-Clause; Apache HTTP Server and PHP in the official image (Apache-2.0, PHP-3.01). Caddy (Apache-2.0) is installed on the host as the reverse proxy. Nextcloud Enterprise features are not used.",
+    "conditions": [
+      "AGPL-3.0: users of the network service may request the corresponding source; Nextcloud is run unmodified",
+      "Nextcloud name and logo are trademarks of Nextcloud GmbH: do not imply an official or endorsed service",
+      "Redis is pinned at 7.2.x; later Redis releases are not BSD-licensed and must not be substituted"
+    ]
+  }
+}

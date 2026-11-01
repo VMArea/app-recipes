@@ -1,0 +1,77 @@
+{
+  "slug": "lemp",
+  "name": "LEMP Stack",
+  "summary": "nginx, MariaDB and PHP-FPM on Ubuntu 24.04 with a ready application database and a placeholder site.",
+  "appVersion": "24.04",
+  "minVcpu": 1,
+  "minRamMb": 1024,
+  "minDiskGb": 10,
+  "firstRunTimeoutMinutes": 12,
+  "supportsDomain": true,
+  "exposurePolicy": {
+    "openByDefault": [
+      {
+        "port": 22,
+        "protocol": "tcp",
+        "label": "SSH"
+      },
+      {
+        "port": 80,
+        "protocol": "tcp",
+        "label": "HTTP"
+      }
+    ],
+    "openOnRequest": [],
+    "localhostOnly": [
+      {
+        "port": 3306,
+        "protocol": "tcp",
+        "label": "MariaDB"
+      }
+    ]
+  },
+  "outputs": [
+    {
+      "key": "url",
+      "label": "Site URL",
+      "secret": false,
+      "required": true
+    },
+    {
+      "key": "dbName",
+      "label": "Database name",
+      "secret": false,
+      "required": true
+    },
+    {
+      "key": "dbUser",
+      "label": "Database user",
+      "secret": false,
+      "required": true
+    },
+    {
+      "key": "dbPassword",
+      "label": "Database password",
+      "secret": true,
+      "required": true
+    }
+  ],
+  "healthCheck": {
+    "type": "http",
+    "url": "http://127.0.0.1/",
+    "expectStatus": [
+      200,
+      301
+    ]
+  },
+  "notes": "Packages come from the Ubuntu 24.04 archive (nginx, MariaDB 10.11, PHP 8.3-FPM) and receive security updates automatically. MariaDB listens on localhost only. Site files live in /var/www/html. With a domain, the site is served on http first and Let's Encrypt is requested through certbot; if DNS is not ready, a systemd timer retries hourly until it succeeds and then disables itself. Without a domain the site is served on plain http at the server IP.",
+  "licence": {
+    "spdx": "BSD-2-Clause",
+    "url": "https://raw.githubusercontent.com/nginx/nginx/release-1.24.0/docs/text/LICENSE",
+    "shippedTag": "Ubuntu 24.04 packages",
+    "note": "nginx BSD-2-Clause; MariaDB Server GPL-2.0; PHP PHP-3.01; Certbot Apache-2.0. All installed unmodified from the Ubuntu 24.04 archive.",
+    "conditions": [
+      "MariaDB and PHP names are trademarks of their owners: use only to identify the software"
+    ]
+  }
+}

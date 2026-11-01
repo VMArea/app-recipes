@@ -1,0 +1,37 @@
+{
+  "slug": "docker-ce",
+  "name": "Docker CE",
+  "summary": "Ubuntu 24.04 with Docker Engine and the Compose plugin installed and running.",
+  "appVersion": "29.9.2",
+  "minVcpu": 1,
+  "minRamMb": 1024,
+  "minDiskGb": 10,
+  "firstRunTimeoutMinutes": 10,
+  "supportsDomain": false,
+  "exposurePolicy": {
+    "openByDefault": [
+      {
+        "port": 22,
+        "protocol": "tcp",
+        "label": "SSH"
+      }
+    ],
+    "openOnRequest": [],
+    "localhostOnly": []
+  },
+  "outputs": [],
+  "healthCheck": {
+    "type": "tcp",
+    "port": 22
+  },
+  "notes": "Docker Engine and CLI pinned to 29.9.2 from the official repository, key fingerprint checked. The script exit status is the setup gate; the health check confirms the server answers.",
+  "licence": {
+    "spdx": "Apache-2.0",
+    "url": "https://raw.githubusercontent.com/moby/moby/docker-v29.9.2/LICENSE",
+    "shippedTag": "docker-v29.9.2",
+    "note": "Docker Engine (moby) and Docker CLI Apache-2.0; containerd Apache-2.0; Compose plugin Apache-2.0.",
+    "conditions": [
+      "No Docker logo or endorsement wording in marketing copy"
+    ]
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "slug": "wordpress",
+  "name": "WordPress",
+  "summary": "WordPress on nginx, MariaDB and PHP-FPM with the administrator created at install and optional Let's Encrypt HTTPS.",
+  "appVersion": "7.1.3",
+  "minVcpu": 1,
+  "minRamMb": 1024,
+  "minDiskGb": 10,
+  "firstRunTimeoutMinutes": 15,
+  "supportsDomain": true,
+  "loginIdentifier": {
+    "kind": "username",
+    "value": "wpadmin"
+  },
+  "exposurePolicy": {
+    "openByDefault": [
+      {
+        "port": 22,
+        "protocol": "tcp",
+        "label": "SSH"
+      },
+      {
+        "port": 80,
+        "protocol": "tcp",
+        "label": "HTTP"
+      }
+    ],
+    "openOnRequest": [],
+    "localhostOnly": [
+      {
+        "port": 3306,
+        "protocol": "tcp",
+        "label": "MariaDB"
+      }
+    ]
+  },
+  "outputs": [
+    {
+      "key": "url",
+      "label": "Site URL (admin at /wp-admin)",
+      "secret": false,
+      "required": true
+    },
+    {
+      "key": "adminUser",
+      "label": "Admin username",
+      "secret": false,
+      "required": true
+    },
+    {
+      "key": "adminPassword",
+      "label": "Admin password",
+      "secret": true,
+      "required": true
+    }
+  ],
+  "healthCheck": {
+    "type": "http",
+    "url": "http://127.0.0.1/wp-login.php",
+    "expectStatus": [
+      200,
+      301
+    ]
+  },
+  "notes": "WordPress 7.1.3 downloaded from wordpress.org and verified against its published SHA-1; WP-CLI 2.12.0 verified by SHA-512. Web stack from the Ubuntu 24.04 archive (nginx, MariaDB 10.11, PHP 8.3-FPM). The administrator is created by WP-CLI during setup, so no installer is left open. With a domain, the site is served on http first and Let's Encrypt is requested through certbot; if DNS is not ready a systemd timer retries hourly until it succeeds, then switches the site URL to https and disables itself. Without a domain the site is served on plain http at the server IP; add a domain to enable HTTPS. XML-RPC is blocked. The admin email is a placeholder that can be changed in WordPress settings.",
+  "licence": {
+    "spdx": "GPL-2.0-or-later",
+    "url": "https://raw.githubusercontent.com/WordPress/WordPress/7.1.3/license.txt",
+    "shippedTag": "7.1.3",
+    "note": "WordPress GPL-2.0-or-later (bundled libraries GPL-compatible); WP-CLI MIT; nginx BSD-2-Clause; MariaDB Server GPL-2.0; PHP PHP-3.01; Certbot Apache-2.0.",
+    "conditions": [
+      "WordPress and its logo are trademarks of the WordPress Foundation: do not imply the service is WordPress.com or endorsed",
+      "Do not use the WordPress name in a product or domain name without the Foundation permission"
+    ]
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "slug": "portainer-ce",
+  "name": "Portainer CE",
+  "summary": "Portainer Community Edition container management UI on Docker, with the administrator account created at install.",
+  "appVersion": "2.45.3",
+  "minVcpu": 1,
+  "minRamMb": 1024,
+  "minDiskGb": 10,
+  "firstRunTimeoutMinutes": 15,
+  "supportsDomain": true,
+  "loginIdentifier": {
+    "kind": "username",
+    "value": "admin"
+  },
+  "exposurePolicy": {
+    "openByDefault": [
+      {
+        "port": 22,
+        "protocol": "tcp",
+        "label": "SSH"
+      },
+      {
+        "port": 80,
+        "protocol": "tcp",
+        "label": "HTTP"
+      },
+      {
+        "port": 443,
+        "protocol": "tcp",
+        "label": "HTTPS"
+      }
+    ],
+    "openOnRequest": [],
+    "localhostOnly": [
+      {
+        "port": 9000,
+        "protocol": "tcp",
+        "label": "Portainer HTTP behind Caddy"
+      }
+    ]
+  },
+  "outputs": [
+    {
+      "key": "url",
+      "label": "Portainer URL",
+      "secret": false,
+      "required": true
+    },
+    {
+      "key": "adminUser",
+      "label": "Admin username",
+      "secret": false,
+      "required": true
+    },
+    {
+      "key": "adminPassword",
+      "label": "Admin password",
+      "secret": true,
+      "required": true
+    }
+  ],
+  "healthCheck": {
+    "type": "http",
+    "url": "http://127.0.0.1:9000/api/system/status",
+    "expectStatus": [
+      200
+    ]
+  },
+  "notes": "Portainer CE 2.45.3 pinned by tag and digest. The administrator is created at first start from a root-only password file, so there is no first-visitor setup window. Caddy serves it over HTTPS (Let's Encrypt with a domain, a self-signed certificate on the bare IP). The Docker socket is mounted into the container only; nothing is exposed on the network except through Caddy.",
+  "licence": {
+    "spdx": "Zlib",
+    "url": "https://raw.githubusercontent.com/portainer/portainer/2.45.3/LICENSE",
+    "shippedTag": "2.45.3",
+    "note": "Portainer CE image portainer/portainer-ce is Zlib. Caddy Apache-2.0. Docker Engine Apache-2.0. Portainer Business Edition features are not shipped or unlocked.",
+    "conditions": [
+      "Portainer is a trademark of Portainer.io: use the name only to identify the software, no endorsement implied",
+      "Do not enable or sell Portainer Business Edition features without a Portainer licence"
+    ]
+  }
+}

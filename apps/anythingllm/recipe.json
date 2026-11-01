@@ -1,0 +1,70 @@
+{
+  "slug": "anythingllm",
+  "name": "AnythingLLM",
+  "summary": "Private AI workspace for chatting with your documents, password protected, bring your own model or API key.",
+  "appVersion": "1.18.0",
+  "minVcpu": 2,
+  "minRamMb": 2048,
+  "minDiskGb": 15,
+  "firstRunTimeoutMinutes": 15,
+  "supportsDomain": true,
+  "exposurePolicy": {
+    "openByDefault": [
+      {
+        "port": 22,
+        "protocol": "tcp",
+        "label": "SSH"
+      },
+      {
+        "port": 80,
+        "protocol": "tcp",
+        "label": "HTTP redirect"
+      },
+      {
+        "port": 443,
+        "protocol": "tcp",
+        "label": "AnythingLLM (HTTPS)"
+      }
+    ],
+    "openOnRequest": [],
+    "localhostOnly": [
+      {
+        "port": 3001,
+        "protocol": "tcp",
+        "label": "AnythingLLM (behind Caddy)"
+      }
+    ]
+  },
+  "outputs": [
+    {
+      "key": "url",
+      "label": "AnythingLLM URL",
+      "secret": false,
+      "required": true
+    },
+    {
+      "key": "adminPassword",
+      "label": "Access password",
+      "secret": true,
+      "required": true
+    }
+  ],
+  "healthCheck": {
+    "type": "http",
+    "url": "http://127.0.0.1:3001/api/ping",
+    "expectStatus": [
+      200
+    ]
+  },
+  "notes": "Official mintplexlabs/anythingllm 1.18.0 image pinned by tag and digest. Single-user mode is protected by AUTH_TOKEN, so nobody can open the workspace without the access password; the password and JWT secret rotate on regeneration. No model keys are bundled: choose a provider and enter your own key, or point it at a local model, on first visit. Telemetry is disabled. The container runs without the SYS_ADMIN capability, so the browser based web-page scraper may be limited. Without a domain the site is served over HTTPS with a self-signed certificate for the IP address.",
+  "licence": {
+    "spdx": "MIT",
+    "url": "https://raw.githubusercontent.com/Mintplex-Labs/anything-llm/v1.18.0/LICENSE",
+    "shippedTag": "v1.18.0",
+    "note": "AnythingLLM MIT. Bundled in the official image: Node.js (MIT), LanceDB embedded vector store (Apache-2.0), SQLite (public domain), Chromium for scraping (BSD-3-Clause). Caddy (Apache-2.0) is installed on the host as the reverse proxy.",
+    "conditions": [
+      "Keep the MIT copyright notice with redistributed copies",
+      "Customer supplies their own model provider keys; third-party model terms apply"
+    ]
+  }
+}

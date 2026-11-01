@@ -1,0 +1,88 @@
+{
+  "slug": "ollama-open-webui",
+  "name": "Ollama + Open WebUI",
+  "summary": "Private ChatGPT-style chat on CPU with Ollama and Open WebUI, a small model pre-loaded and sign-up closed.",
+  "appVersion": "0.12.3",
+  "minVcpu": 4,
+  "minRamMb": 8192,
+  "minDiskGb": 40,
+  "firstRunTimeoutMinutes": 40,
+  "supportsDomain": true,
+  "loginIdentifier": {
+    "kind": "email",
+    "value": "admin@openwebui.local"
+  },
+  "exposurePolicy": {
+    "openByDefault": [
+      {
+        "port": 22,
+        "protocol": "tcp",
+        "label": "SSH"
+      },
+      {
+        "port": 80,
+        "protocol": "tcp",
+        "label": "HTTP redirect"
+      },
+      {
+        "port": 443,
+        "protocol": "tcp",
+        "label": "Open WebUI (HTTPS)"
+      }
+    ],
+    "openOnRequest": [],
+    "localhostOnly": [
+      {
+        "port": 8080,
+        "protocol": "tcp",
+        "label": "Open WebUI (behind Caddy)"
+      },
+      {
+        "port": 11434,
+        "protocol": "tcp",
+        "label": "Ollama API"
+      }
+    ]
+  },
+  "outputs": [
+    {
+      "key": "url",
+      "label": "Open WebUI URL",
+      "secret": false,
+      "required": true
+    },
+    {
+      "key": "adminEmail",
+      "label": "Admin email",
+      "secret": false,
+      "required": true
+    },
+    {
+      "key": "adminPassword",
+      "label": "Admin password",
+      "secret": true,
+      "required": true
+    }
+  ],
+  "healthCheck": {
+    "type": "http",
+    "url": "http://127.0.0.1:8080/health",
+    "expectStatus": [
+      200
+    ]
+  },
+  "notes": "Ollama 0.40.11 and Open WebUI v0.12.3 pinned by tag and digest, CPU only. The qwen2.5:0.5b model (Apache-2.0) is pulled at first run; larger models can be pulled from the UI and need more RAM. The admin account is created from environment variables at first start and sign-up is disabled, so there is no first-visitor window. The Ollama API listens on 127.0.0.1 only. Open WebUI branding is left untouched as its licence requires. Without a domain the site is served over HTTPS with a self-signed certificate for the IP address.",
+  "licence": {
+    "spdx": "LicenseRef-Open-WebUI",
+    "url": "https://raw.githubusercontent.com/open-webui/open-webui/v0.12.3/LICENSE",
+    "shippedTag": "v0.12.3",
+    "note": "Open WebUI: BSD-3-Clause text plus a branding clause (not pure BSD, not OSI approved). Ollama MIT. Model qwen2.5:0.5b Apache-2.0. Caddy (Apache-2.0) is installed on the host as the reverse proxy.",
+    "conditions": [
+      "Open WebUI clause 4: the name, logo and visual or textual identifiers of Open WebUI must not be altered, removed, obscured or replaced in any deployment",
+      "The clause is waived only for deployments of 50 end users or fewer in any rolling 30 days, with written permission from Open WebUI Inc., or with an enterprise licence",
+      "This recipe never sets WEBUI_NAME or custom logos; customers must not rebrand the UI without a licence",
+      "Keep the BSD-3-Clause copyright notice and disclaimer; the licence forbids using the contributors names to endorse products",
+      "Models pulled later carry their own licences (the preloaded qwen2.5:0.5b is Apache-2.0)"
+    ]
+  }
+}

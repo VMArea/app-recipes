@@ -1,0 +1,81 @@
+{
+  "slug": "librechat",
+  "name": "LibreChat",
+  "summary": "Multi-provider AI chat interface with accounts, registration closed and an admin user created for you.",
+  "appVersion": "0.8.8",
+  "minVcpu": 2,
+  "minRamMb": 4096,
+  "minDiskGb": 20,
+  "firstRunTimeoutMinutes": 20,
+  "supportsDomain": true,
+  "loginIdentifier": {
+    "kind": "email",
+    "value": "admin@librechat.local"
+  },
+  "exposurePolicy": {
+    "openByDefault": [
+      {
+        "port": 22,
+        "protocol": "tcp",
+        "label": "SSH"
+      },
+      {
+        "port": 80,
+        "protocol": "tcp",
+        "label": "HTTP redirect"
+      },
+      {
+        "port": 443,
+        "protocol": "tcp",
+        "label": "LibreChat (HTTPS)"
+      }
+    ],
+    "openOnRequest": [],
+    "localhostOnly": [
+      {
+        "port": 3080,
+        "protocol": "tcp",
+        "label": "LibreChat (behind Caddy)"
+      }
+    ]
+  },
+  "outputs": [
+    {
+      "key": "url",
+      "label": "LibreChat URL",
+      "secret": false,
+      "required": true
+    },
+    {
+      "key": "adminEmail",
+      "label": "Admin email",
+      "secret": false,
+      "required": true
+    },
+    {
+      "key": "adminPassword",
+      "label": "Admin password",
+      "secret": true,
+      "required": true
+    }
+  ],
+  "healthCheck": {
+    "type": "http",
+    "url": "http://127.0.0.1:3080/health",
+    "expectStatus": [
+      200
+    ]
+  },
+  "notes": "LibreChat v0.8.8 with FerretDB 2.7.0 on PostgreSQL with the DocumentDB extension instead of MongoDB (SSPL), all pinned by tag and digest. Meilisearch search and the RAG API are not installed. Self-registration is off; the admin user is created with the project's own create-user script and its password is set on every run. No provider keys are bundled: users enter their own API keys in the UI. Without a domain the site is served over HTTPS with a self-signed certificate for the IP address.",
+  "licence": {
+    "spdx": "MIT",
+    "url": "https://raw.githubusercontent.com/danny-avila/LibreChat/v0.8.8/LICENSE",
+    "shippedTag": "v0.8.8",
+    "note": "LibreChat MIT; FerretDB 2.7.0 Apache-2.0; DocumentDB extension MIT; PostgreSQL under the PostgreSQL licence. MongoDB (SSPL) is deliberately not used. Caddy (Apache-2.0) is installed on the host as the reverse proxy.",
+    "conditions": [
+      "Keep the MIT copyright notice with redistributed copies",
+      "FerretDB with LibreChat is a vendor documented but less common combination than MongoDB",
+      "Users bring their own model provider keys; third-party provider terms apply"
+    ]
+  }
+}

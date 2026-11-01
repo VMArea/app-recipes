@@ -1,0 +1,70 @@
+{
+  "slug": "vaultwarden",
+  "name": "Vaultwarden",
+  "summary": "Self-hosted password manager server compatible with Bitwarden clients, with open sign-up disabled and an admin panel.",
+  "appVersion": "1.37.4",
+  "minVcpu": 1,
+  "minRamMb": 1024,
+  "minDiskGb": 10,
+  "firstRunTimeoutMinutes": 12,
+  "supportsDomain": true,
+  "exposurePolicy": {
+    "openByDefault": [
+      {
+        "port": 22,
+        "protocol": "tcp",
+        "label": "SSH"
+      },
+      {
+        "port": 80,
+        "protocol": "tcp",
+        "label": "HTTP"
+      },
+      {
+        "port": 443,
+        "protocol": "tcp",
+        "label": "HTTPS"
+      }
+    ],
+    "openOnRequest": [],
+    "localhostOnly": [
+      {
+        "port": 8080,
+        "protocol": "tcp",
+        "label": "Vaultwarden HTTP behind Caddy"
+      }
+    ]
+  },
+  "outputs": [
+    {
+      "key": "url",
+      "label": "Vaultwarden URL",
+      "secret": false,
+      "required": true
+    },
+    {
+      "key": "adminToken",
+      "label": "Admin panel token (open /admin)",
+      "secret": true,
+      "required": true
+    }
+  ],
+  "healthCheck": {
+    "type": "http",
+    "url": "http://127.0.0.1:8080/alive",
+    "expectStatus": [
+      200
+    ]
+  },
+  "notes": "Vaultwarden 1.37.4 pinned by tag and digest. Sign-up is disabled; the owner opens /admin with the admin token and invites users (an invited email address can then register). The admin token is stored only as an Argon2id hash (argon2 package, piped on stdin, no TTY needed). Caddy provides HTTPS, required by the web vault: Let's Encrypt with a domain, a self-signed certificate on the bare IP.",
+  "licence": {
+    "spdx": "AGPL-3.0-only",
+    "url": "https://raw.githubusercontent.com/dani-garcia/vaultwarden/1.37.4/LICENSE.txt",
+    "shippedTag": "1.37.4",
+    "note": "Vaultwarden AGPL-3.0; its bundled web vault (bw_web_builds / Bitwarden web client) is GPL-3.0. Caddy Apache-2.0. Docker Engine Apache-2.0. Source of the unmodified server is available from the upstream repository.",
+    "conditions": [
+      "Vaultwarden is not affiliated with Bitwarden: do not use Bitwarden branding or imply endorsement",
+      "Offer the AGPL corresponding source (upstream repository link) if the software is modified"
+    ]
+  }
+}

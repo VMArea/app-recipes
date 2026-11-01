@@ -1,0 +1,78 @@
+{
+  "slug": "ghost",
+  "name": "Ghost",
+  "summary": "Publishing platform for blogs and newsletters on Docker with MySQL, with the owner account created at install.",
+  "appVersion": "6.72.0",
+  "minVcpu": 1,
+  "minRamMb": 2048,
+  "minDiskGb": 15,
+  "firstRunTimeoutMinutes": 20,
+  "supportsDomain": true,
+  "exposurePolicy": {
+    "openByDefault": [
+      {
+        "port": 22,
+        "protocol": "tcp",
+        "label": "SSH"
+      },
+      {
+        "port": 80,
+        "protocol": "tcp",
+        "label": "HTTP"
+      },
+      {
+        "port": 443,
+        "protocol": "tcp",
+        "label": "HTTPS"
+      }
+    ],
+    "openOnRequest": [],
+    "localhostOnly": [
+      {
+        "port": 2368,
+        "protocol": "tcp",
+        "label": "Ghost HTTP behind Caddy"
+      }
+    ]
+  },
+  "outputs": [
+    {
+      "key": "url",
+      "label": "Site URL (admin at /ghost)",
+      "secret": false,
+      "required": true
+    },
+    {
+      "key": "adminEmail",
+      "label": "Owner email",
+      "secret": false,
+      "required": true
+    },
+    {
+      "key": "adminPassword",
+      "label": "Owner password",
+      "secret": true,
+      "required": true
+    }
+  ],
+  "healthCheck": {
+    "type": "http",
+    "url": "http://127.0.0.1:2368/ghost/api/admin/site/",
+    "expectStatus": [
+      200,
+      301,
+      302
+    ]
+  },
+  "notes": "Ghost 6.72.0 (official image, tag and digest) with MySQL 8.4.13 (official image, tag and digest) behind Caddy. The owner is created through the Admin API during setup, so no first-visitor setup window exists. Outgoing mail is not configured, so staff device verification is turned off; configure a mail service in Ghost to enable newsletters and password reset. The owner email is a placeholder (owner@domain with a domain) that can be changed in Ghost settings.",
+  "licence": {
+    "spdx": "MIT",
+    "url": "https://raw.githubusercontent.com/TryGhost/Ghost/v6.72.0/LICENSE",
+    "shippedTag": "v6.72.0",
+    "note": "Ghost core and Admin MIT. MySQL Community Server is GPL-2.0 (with FOSS exception), run as an unmodified separate container. Caddy Apache-2.0. Docker Engine Apache-2.0. Official image bundles Node.js (MIT) and Alpine Linux.",
+    "conditions": [
+      "Ghost is a trademark of the Ghost Foundation: do not present the service as Ghost(Pro) or imply endorsement",
+      "Ghost(Pro) managed hosting is a separate commercial offering, not provided here"
+    ]
+  }
+}

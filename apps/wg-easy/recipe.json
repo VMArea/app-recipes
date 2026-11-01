@@ -1,0 +1,83 @@
+{
+  "slug": "wg-easy",
+  "name": "WireGuard VPN (wg-easy)",
+  "summary": "Your own WireGuard VPN server with a web UI to add devices and scan QR codes, admin account preconfigured.",
+  "appVersion": "15.4.0",
+  "minVcpu": 1,
+  "minRamMb": 1024,
+  "minDiskGb": 10,
+  "firstRunTimeoutMinutes": 15,
+  "supportsDomain": true,
+  "loginIdentifier": {
+    "kind": "username",
+    "value": "admin"
+  },
+  "exposurePolicy": {
+    "openByDefault": [
+      {
+        "port": 22,
+        "protocol": "tcp",
+        "label": "SSH"
+      },
+      {
+        "port": 80,
+        "protocol": "tcp",
+        "label": "HTTP redirect"
+      },
+      {
+        "port": 443,
+        "protocol": "tcp",
+        "label": "Admin UI (HTTPS)"
+      },
+      {
+        "port": 51820,
+        "protocol": "udp",
+        "label": "WireGuard"
+      }
+    ],
+    "openOnRequest": [],
+    "localhostOnly": [
+      {
+        "port": 51821,
+        "protocol": "tcp",
+        "label": "wg-easy web UI (behind Caddy)"
+      }
+    ]
+  },
+  "outputs": [
+    {
+      "key": "url",
+      "label": "Admin UI URL",
+      "secret": false,
+      "required": true
+    },
+    {
+      "key": "adminUser",
+      "label": "Admin username",
+      "secret": false,
+      "required": true
+    },
+    {
+      "key": "adminPassword",
+      "label": "Admin password",
+      "secret": true,
+      "required": true
+    }
+  ],
+  "healthCheck": {
+    "type": "http",
+    "url": "http://127.0.0.1:51821/"
+  },
+  "notes": "Official wg-easy 15.4.0 image pinned by tag and digest. The admin account, endpoint host and port are created at first start with the unattended INIT_* variables, so the web UI is never left open to a first visitor. The UI is only reachable through Caddy over HTTPS; WireGuard listens on UDP 51820. Without a domain the UI is served with a self-signed certificate for the IP address and clients connect to the IP.",
+  "licence": {
+    "spdx": "AGPL-3.0-only",
+    "url": "https://raw.githubusercontent.com/wg-easy/wg-easy/v15.4.0/LICENSE",
+    "shippedTag": "v15.4.0",
+    "note": "wg-easy AGPL-3.0 (run unmodified); wireguard-tools GPL-2.0; Node.js MIT; amneziawg-tools GPL-2.0 and amneziawg-go MIT (bundled, not enabled). Versions before 15 used a non-commercial licence and must not be used. Caddy (Apache-2.0) is installed on the host as the reverse proxy.",
+    "conditions": [
+      "AGPL-3.0: users of the network service may request the corresponding source; wg-easy is run unmodified",
+      "WireGuard is a registered trademark of Jason A. Donenfeld: do not imply an official service",
+      "Only wg-easy 15.x or later; older releases are licensed for non-commercial use only"
+    ]
+  }
+}

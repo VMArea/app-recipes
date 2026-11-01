@@ -1,0 +1,79 @@
+{
+  "slug": "gitea",
+  "name": "Gitea",
+  "summary": "Self-hosted Git service with issues, pull requests and packages, with the administrator created at install and registration disabled.",
+  "appVersion": "28.2.0",
+  "minVcpu": 1,
+  "minRamMb": 1024,
+  "minDiskGb": 10,
+  "firstRunTimeoutMinutes": 15,
+  "supportsDomain": true,
+  "loginIdentifier": {
+    "kind": "username",
+    "value": "gitadmin"
+  },
+  "exposurePolicy": {
+    "openByDefault": [
+      {
+        "port": 22,
+        "protocol": "tcp",
+        "label": "SSH (server login)"
+      },
+      {
+        "port": 80,
+        "protocol": "tcp",
+        "label": "HTTP"
+      },
+      {
+        "port": 443,
+        "protocol": "tcp",
+        "label": "HTTPS"
+      }
+    ],
+    "openOnRequest": [],
+    "localhostOnly": [
+      {
+        "port": 3000,
+        "protocol": "tcp",
+        "label": "Gitea HTTP behind Caddy"
+      }
+    ]
+  },
+  "outputs": [
+    {
+      "key": "url",
+      "label": "Gitea URL",
+      "secret": false,
+      "required": true
+    },
+    {
+      "key": "adminUser",
+      "label": "Admin username",
+      "secret": false,
+      "required": true
+    },
+    {
+      "key": "adminPassword",
+      "label": "Admin password",
+      "secret": true,
+      "required": true
+    }
+  ],
+  "healthCheck": {
+    "type": "http",
+    "url": "http://127.0.0.1:3000/api/healthz",
+    "expectStatus": [
+      200
+    ]
+  },
+  "notes": "Gitea 28.2.0 pinned by tag and digest, SQLite database, install wizard locked, public registration disabled. Repositories are cloned over HTTPS only; Gitea's built-in SSH server is disabled. Caddy provides HTTPS (Let's Encrypt with a domain, self-signed on the bare IP). The admin email is a placeholder that the owner can change in settings. The username admin is reserved by Gitea, so the account is gitadmin.",
+  "licence": {
+    "spdx": "MIT",
+    "url": "https://raw.githubusercontent.com/go-gitea/gitea/v28.2.0/LICENSE",
+    "shippedTag": "v28.2.0",
+    "note": "Gitea MIT. Image bundles Alpine Linux base (various permissive/GPL packages), git (GPL-2.0), OpenSSH (BSD). Caddy Apache-2.0. Docker Engine Apache-2.0.",
+    "conditions": [
+      "Gitea name and logo are trademarks of the Gitea project: use only to identify the software, no endorsement implied"
+    ]
+  }
+}

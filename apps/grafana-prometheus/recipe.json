@@ -1,0 +1,90 @@
+{
+  "slug": "grafana-prometheus",
+  "name": "Grafana + Prometheus",
+  "summary": "Grafana OSS dashboards with Prometheus and node-exporter already scraping this server, with the datasource provisioned.",
+  "appVersion": "13.2.4",
+  "minVcpu": 1,
+  "minRamMb": 2048,
+  "minDiskGb": 15,
+  "firstRunTimeoutMinutes": 15,
+  "supportsDomain": true,
+  "loginIdentifier": {
+    "kind": "username",
+    "value": "admin"
+  },
+  "exposurePolicy": {
+    "openByDefault": [
+      {
+        "port": 22,
+        "protocol": "tcp",
+        "label": "SSH"
+      },
+      {
+        "port": 80,
+        "protocol": "tcp",
+        "label": "HTTP redirect"
+      },
+      {
+        "port": 443,
+        "protocol": "tcp",
+        "label": "Grafana (HTTPS)"
+      }
+    ],
+    "openOnRequest": [],
+    "localhostOnly": [
+      {
+        "port": 3000,
+        "protocol": "tcp",
+        "label": "Grafana (behind Caddy)"
+      },
+      {
+        "port": 9090,
+        "protocol": "tcp",
+        "label": "Prometheus"
+      },
+      {
+        "port": 9100,
+        "protocol": "tcp",
+        "label": "node-exporter"
+      }
+    ]
+  },
+  "outputs": [
+    {
+      "key": "url",
+      "label": "Grafana URL",
+      "secret": false,
+      "required": true
+    },
+    {
+      "key": "adminUser",
+      "label": "Admin username",
+      "secret": false,
+      "required": true
+    },
+    {
+      "key": "adminPassword",
+      "label": "Admin password",
+      "secret": true,
+      "required": true
+    }
+  ],
+  "healthCheck": {
+    "type": "http",
+    "url": "http://127.0.0.1:3000/api/health",
+    "expectStatus": [
+      200
+    ]
+  },
+  "notes": "Grafana OSS 13.2.4 (grafana/grafana image, not Enterprise), Prometheus v3.15.1 and node-exporter v1.12.1 pinned by tag and digest. Prometheus and node-exporter listen on 127.0.0.1 only; Grafana is proxied by Caddy. Sign-up and anonymous access are off and the admin password is set with the Grafana CLI on every run. Without a domain the dashboard is served over HTTPS with a self-signed certificate for the IP address.",
+  "licence": {
+    "spdx": "AGPL-3.0-only",
+    "url": "https://raw.githubusercontent.com/grafana/grafana/v13.2.4/LICENSE",
+    "shippedTag": "v13.2.4",
+    "note": "Grafana OSS AGPL-3.0; Prometheus v3.15.1 Apache-2.0; node-exporter v1.12.1 Apache-2.0. Caddy (Apache-2.0) is installed on the host as the reverse proxy. The Enterprise edition is not used.",
+    "conditions": [
+      "AGPL-3.0: users of the network service may request the corresponding source; Grafana is run unmodified",
+      "Do not use Grafana logos as your own branding or imply endorsement by Grafana Labs"
+    ]
+  }
+}
