@@ -78,7 +78,7 @@ All product names, logos and trademarks belong to their respective owners. Their
 ## What the installers do
 
 - Versions are pinned. Container images are pinned by tag and sha256 digest; the Docker repository key, the Caddy and WP-CLI downloads and the WordPress archive are checked against published fingerprints or checksums before use.
-- Apps that need HTTPS sit behind Caddy: Let's Encrypt with `--domain`, a self-signed certificate on the bare IP otherwise. WordPress and LEMP use nginx with certbot; with a domain, a systemd timer retries every hour until DNS resolves. The Let's Encrypt path needs public DNS and is not part of the automated tests.
+- Apps that need HTTPS sit behind Caddy: Let's Encrypt with `--domain`, a self-signed certificate on the bare IP otherwise. WordPress and LEMP use nginx with certbot; with a domain, a systemd timer retries every hour until DNS resolves. The Let's Encrypt path needs public DNS, so it is tested by hand rather than in the automated tests.
 - Internal services (databases, metrics, admin APIs) listen on `127.0.0.1` or a private container network.
 - Security updates are enabled with `unattended-upgrades` where the installer manages the host.
 - A health check must pass before the installer reports success.
