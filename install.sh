@@ -7,6 +7,7 @@ META="$ROOT/lib/recipe-meta.py"
 LOG=/var/log/vmarea-app-install.log
 OUT_DIR=/run/vmarea
 OUT="$OUT_DIR/app-outputs"
+MARKER=/var/lib/vmarea/installed-app
 HEALTH_WAIT_SEC=180
 
 usage() {
@@ -93,6 +94,11 @@ if [ "$have_cpu" -lt "$min_cpu" ] || [ "$have_ram" -lt $((min_ram * 9 / 10)) ]; 
   warn "$app needs at least $min_cpu vCPU and $min_ram MB RAM; this server has $have_cpu vCPU and $have_ram MB"
 fi
 
+if [ -s "$MARKER" ]; then
+  installed=$(head -n 1 "$MARKER")
+  [ "$installed" = "$app" ] || die "this server already has $installed installed; install $app on a fresh Ubuntu 24.04 server (one app per server)"
+fi
+
 umask 077
 install -d -m 0700 "$OUT_DIR"
 : >"$OUT"
@@ -130,6 +136,9 @@ set -e
 
 printf 'Waiting for the health check\n'
 python3 "$META" health "$recipe_json" "$HEALTH_WAIT_SEC" || die "health check did not pass within ${HEALTH_WAIT_SEC}s; see $LOG"
+
+install -d -m 0700 "$(dirname "$MARKER")"
+printf '%s\n' "$app" >"$MARKER"
 
 printf '\n%s is ready.\n\n' "$name"
 python3 "$META" outputs "$recipe_json" "$OUT" "$creds_file" || die "the installer did not produce its declared outputs; see $LOG"

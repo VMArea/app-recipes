@@ -72,14 +72,14 @@ wpcli() {
 }
 
 if [ ! -f "$WP_DIR/wp-config.php" ]; then
-  wpcli config create --dbname="$DB_NAME" --dbuser="$DB_USER" --dbpass="$db_password" --dbcharset=utf8mb4 --skip-check >/dev/null
+  printf '%s\n' "$db_password" | wpcli config create --dbname="$DB_NAME" --dbuser="$DB_USER" --prompt=dbpass --dbcharset=utf8mb4 --skip-check >/dev/null
 fi
 
 if ! wpcli core is-installed >/dev/null 2>&1; then
   vm_log "installing WordPress"
-  wpcli core install --url="$install_url" --title="My WordPress site" --admin_user="$WP_ADMIN" --admin_password="$admin_password" --admin_email="$admin_email" --skip-email >/dev/null
+  printf '%s\n' "$admin_password" | wpcli core install --url="$install_url" --title="My WordPress site" --admin_user="$WP_ADMIN" --prompt=admin_password --admin_email="$admin_email" --skip-email >/dev/null
 else
-  wpcli user update "$WP_ADMIN" --user_pass="$admin_password" >/dev/null
+  WP_NEW_PASS="$admin_password" WP_LOGIN="$WP_ADMIN" wpcli eval 'wp_set_password(getenv("WP_NEW_PASS"), get_user_by("login", getenv("WP_LOGIN"))->ID);' >/dev/null
 fi
 
 php_ver=$(php -r 'echo PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION;')
