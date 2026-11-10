@@ -73,7 +73,7 @@ command -v python3 >/dev/null 2>&1 || die "python3 is required"
 if [ "${VMAREA_ALLOW_UNSUPPORTED:-}" != "1" ]; then
   # shellcheck source=/dev/null
   . /etc/os-release
-  [ "${ID:-}" = "ubuntu" ] && [ "${VERSION_ID:-}" = "24.04" ] || die "Ubuntu 24.04 is required (found ${PRETTY_NAME:-unknown})"
+  if [ "${ID:-}" != "ubuntu" ] || [ "${VERSION_ID:-}" != "24.04" ]; then die "Ubuntu 24.04 is required (found ${PRETTY_NAME:-unknown})"; fi
   [ "$(uname -m)" = "x86_64" ] || die "an x86_64 server is required (found $(uname -m))"
 fi
 

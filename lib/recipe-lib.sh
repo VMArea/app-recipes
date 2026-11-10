@@ -136,7 +136,7 @@ vm_install_docker() {
   local ce cli
   ce=$(apt-cache madison docker-ce | awk -v v="$VM_DOCKER_VERSION" '$3 ~ ("5:" v "-") && !found {print $3; found = 1}')
   cli=$(apt-cache madison docker-ce-cli | awk -v v="$VM_DOCKER_VERSION" '$3 ~ ("5:" v "-") && !found {print $3; found = 1}')
-  [ -n "$ce" ] && [ -n "$cli" ] || vm_die "Docker $VM_DOCKER_VERSION is not in the repository"
+  if [ -z "$ce" ] || [ -z "$cli" ]; then vm_die "Docker $VM_DOCKER_VERSION is not in the repository"; fi
   apt-mark unhold docker-ce docker-ce-cli >/dev/null 2>&1 || true
   vm_apt_install "docker-ce=$ce" "docker-ce-cli=$cli" containerd.io docker-compose-plugin docker-buildx-plugin
   apt-mark hold docker-ce docker-ce-cli >/dev/null
